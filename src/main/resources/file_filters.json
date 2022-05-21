@@ -1,0 +1,5 @@
+{
+  "dirs": ["env", "build", "__pycache__", "dist"],
+  "extensions": ["pyc", "yml", "txt", "md", "cfg"],
+  "files": ["LICENSE"]
+}
