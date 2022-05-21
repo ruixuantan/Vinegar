@@ -1,15 +1,11 @@
+package Analyzer
+
 import java.io.File
 import java.util.Scanner
 import scala.annotation.tailrec
 import scala.collection.immutable.HashSet
 
 object Analyzer:
-  case class Config(
-    commentTokens: HashSet[String],
-    braceTokens: HashSet[String],
-    importKeywords: HashSet[String],
-  )
-
   def isComment(line: Array[String], commentTokens: HashSet[String]): Boolean =
     commentTokens.contains(line.head)
 

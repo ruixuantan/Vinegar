@@ -1,3 +1,5 @@
+package Analyzer
+
 case class FileResults(
     importLineCount: Long = 0,
     functionalLineCount: Long = 0,
