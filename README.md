@@ -8,6 +8,4 @@ Install: jdk, sbt, scala3
 
 `sbt "run <path_to_repo>"` to run the programme
 
-## Building
-Run `sbt package`.
-The jar file will be built under `target/scala-3.1.2/`.
+Alternatively, set up on IntelliJ
