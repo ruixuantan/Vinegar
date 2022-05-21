@@ -1,4 +1,4 @@
-package FileReader
+package Config
 
 import scala.collection.immutable.HashSet
 

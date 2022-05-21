@@ -1,9 +1,11 @@
 package FileReader
 
+import Config.FileFilters
+
 import java.io.File
 import scala.collection.immutable.HashSet
 
-class FileReader(val rootPath: String):
+class FileReader(val rootPath: String, val fileFilters: FileFilters):
   def recursiveListFiles(dir: File): Array[File] =
     val subFolder = dir.listFiles.filter(!_.isHidden)
     subFolder ++ subFolder.filter(_.isDirectory).flatMap(recursiveListFiles)
@@ -12,7 +14,12 @@ class FileReader(val rootPath: String):
     val fullPath = file.toString
     val split = fullPath.split("/")
     val extension = fullPath.split("\\.").last
-    FileAttr(fullPath = fullPath, subDirs = split.dropRight(1), fileName = split.last, extension = extension)
+    FileAttr(
+      fullPath = fullPath,
+      subDirs = split.dropRight(1),
+      fileName = split.last,
+      extension = extension,
+    )
 
   def filterFileExtension(file: FileAttr, extensions: HashSet[String]): Boolean =
     !extensions.contains(file.extension)
@@ -25,7 +32,7 @@ class FileReader(val rootPath: String):
 
   def dirExists: Boolean = File(rootPath).exists
 
-  def getFiles(fileFilters: FileFilters): Array[String] =
+  def getFiles: Array[String] =
     recursiveListFiles(File(rootPath))
       .filter(_.isFile)
       .map(transform)
@@ -36,4 +43,5 @@ class FileReader(val rootPath: String):
       .map(_.fullPath)
 
 object FileReader:
-  def apply(rootPath: String): FileReader = new FileReader(rootPath)
+  def apply(rootPath: String, fileFilters: FileFilters): FileReader = 
+    new FileReader(rootPath, fileFilters)

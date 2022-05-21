@@ -1,29 +1,22 @@
-import Analyzer.{Config, RepoResults}
-import FileReader.{FileFilters, FileReader}
+import Analyzer.{Analyzer, RepoResults}
+import Config.{CodeConfig, ConfigReader, FileFilters}
+import FileReader.FileReader
 
 import java.io.File
 import scala.collection.immutable
 import java.io
 
-object Vinegar extends App:
-  val fileFilters = FileFilters(
-    dirs = immutable.HashSet("env", "build", "__pycache__", "dist"),
-    extensions = immutable.HashSet("pyc", "yml", "txt", "md", "cfg"),
-    files = immutable.HashSet("LICENSE"),
-  )
-  val config = Config(
-    commentTokens = immutable.HashSet("#", "//", "/*", "*/", "*"),
-    braceTokens = immutable.HashSet("{", "}", "(", ")"),
-    importKeywords = immutable.HashSet("import", "#include"),
-  )
-
-  @main def main(path: String): Unit =
-    val fileReader = FileReader(path)
+object Vinegar:
+  @main def main(path: String, configPath: String): Unit =
+    val configReader = ConfigReader(configPath)
+    val fileReader = FileReader(path, configReader.readFileFilters)
+    val analyzer = Analyzer(configReader.readCodeConfig)
     if (fileReader.dirExists) {
-      val res = fileReader.getFiles(fileFilters)
-        .map(Analyzer.Analyzer.analyze(_, config))
+      println(s"Analyzing $path")
+      val res = fileReader.getFiles
+        .map(analyzer.analyze)
         .foldLeft(RepoResults())(_.add(_))
-      print(res)
+      println(res)
     } else {
-      print(s"Directory $path not located")
+      println(s"Directory $path not located")
     }
